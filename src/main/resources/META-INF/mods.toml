@@ -1,0 +1,24 @@
+modLoader="javafml"
+loaderVersion="[1,)"
+license="All Rights Reserved"
+
+[[mods]]
+modId="simpleradio"
+version="1.0.0"
+displayName="Simple Voice Radio"
+authors="CodinGlitch"
+description='''Simple voice radio mod ported to NeoForge 1.21.1'''
+
+[[dependencies.simpleradio]]
+modId="neoforge"
+mandatory=true
+versionRange="[1,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.simpleradio]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.21.1]"
+ordering="NONE"
+side="BOTH"
