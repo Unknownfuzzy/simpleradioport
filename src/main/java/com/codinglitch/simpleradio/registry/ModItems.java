@@ -29,7 +29,11 @@ public class ModItems {
     public static final DeferredItem<Item> IRON_MODULE = ITEMS.register("iron_module", () -> new Item(new Item.Properties()));
     public static final DeferredItem<Item> LISTENER_MODULE = ITEMS.register("listener_module", () -> new Item(new Item.Properties()));
     public static final DeferredItem<Item> NETHERITE_MODULE = ITEMS.register("netherite_module", () -> new Item(new Item.Properties()));
-
+    public static final DeferredItem<Item> WALKIE_TALKIE = ITEMS.register("walkie_talkie", () -> new Item(new Item.Properties()));
+    public static final DeferredItem<Item> SPUDDIE_TALKIE = ITEMS.register("spuddie_talkie", () -> new Item(new Item.Properties()));
+    public static final DeferredItem<Item> TRANSMITTING_MODULE = ITEMS.register("transmitting_module", () -> new Item(new Item.Properties()));
+    public static final DeferredItem<Item> RECEIVING_MODULE = ITEMS.register("receiving_module", () -> new Item(new Item.Properties()));
+    public static final DeferredItem<Item> SPEAKER_MODULE = ITEMS.register("speaker_module", () -> new Item(new Item.Properties()));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
