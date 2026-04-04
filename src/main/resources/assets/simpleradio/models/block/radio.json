@@ -1,7 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "simpleradio:block/radio",
-    "particle": "simpleradio:block/radio"
+    "all": "simpleradio:block/radio"
   }
 }
