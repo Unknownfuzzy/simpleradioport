@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "simpleradio:block/microphone" }
+    "": { "model": "simpleradio:block/microphone_block" }
   }
 }

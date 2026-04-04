@@ -17,10 +17,10 @@ public class ModItems {
     public static final DeferredItem<Item> FREQUENCER = ITEMS.register("frequencer", () -> new BlockItem(ModBlocks.FREQUENCER.get(), new Item.Properties()));
     public static final DeferredItem<Item> INSULATOR = ITEMS.register("insulator", () -> new BlockItem(ModBlocks.INSULATOR.get(), new Item.Properties()));
     public static final DeferredItem<Item> MICROPHONE_BLOCK = ITEMS.register("microphone_block", () -> new BlockItem(ModBlocks.MICROPHONE_BLOCK.get(), new Item.Properties()));
-    public static final DeferredItem<Item> RADIOSMITHER = ITEMS.register("radiosmithers", () -> new BlockItem(ModBlocks.RADIOSMITHER.get(), new Item.Properties()));
+    public static final DeferredItem<Item> RADIOSMITHER = ITEMS.register("radiosmither", () -> new BlockItem(ModBlocks.RADIOSMITHER.get(), new Item.Properties()));
     public static final DeferredItem<Item> RECEIVER = ITEMS.register("receiver", () -> new BlockItem(ModBlocks.RECEIVER.get(), new Item.Properties()));
     public static final DeferredItem<Item> TRANSMITTER = ITEMS.register("transmitter", () -> new BlockItem(ModBlocks.TRANSMITTER.get(), new Item.Properties()));
-
+    public static final DeferredItem<Item> TRANSCEIVER = ITEMS.register("transceiver", () -> new BlockItem(ModBlocks.TRANSCEIVER.get(), new Item.Properties()));
     // Standalone Items (like the handheld microphone)
     public static final DeferredItem<Item> MICROPHONE = ITEMS.register("microphone", () -> new Item(new Item.Properties()));
 

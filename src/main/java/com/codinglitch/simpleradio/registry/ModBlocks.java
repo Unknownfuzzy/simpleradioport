@@ -20,10 +20,11 @@ public class ModBlocks {
     // Additional Blocks from your list
     public static final DeferredBlock<Block> FREQUENCER = BLOCKS.register("frequencer", () -> new Block(BlockBehaviour.Properties.of().strength(2.0f).noOcclusion()));
     public static final DeferredBlock<Block> INSULATOR = BLOCKS.register("insulator", () -> new Block(BlockBehaviour.Properties.of().strength(2.0f).noOcclusion()));
-    public static final DeferredBlock<Block> MICROPHONE_BLOCK = BLOCKS.register("microphone_block", () -> new Block(BlockBehaviour.Properties.of().strength(2.0f).noOcclusion()));
-    public static final DeferredBlock<Block> RADIOSMITHER = BLOCKS.register("radiosmithers", () -> new Block(BlockBehaviour.Properties.of().strength(2.0f).noOcclusion()));
+    public static final DeferredBlock<Block> MICROPHONE_BLOCK = BLOCKS.register("microphone", () -> new Block(BlockBehaviour.Properties.of().strength(2.0f).noOcclusion()));
+    public static final DeferredBlock<Block> RADIOSMITHER = BLOCKS.register("radiosmither", () -> new Block(BlockBehaviour.Properties.of().strength(2.0f).noOcclusion()));
     public static final DeferredBlock<Block> RECEIVER = BLOCKS.register("receiver", () -> new Block(BlockBehaviour.Properties.of().strength(2.0f).noOcclusion()));
     public static final DeferredBlock<Block> TRANSMITTER = BLOCKS.register("transmitter", () -> new Block(BlockBehaviour.Properties.of().strength(2.0f).noOcclusion()));
+    public static final DeferredBlock<Block> TRANSCEIVER = BLOCKS.register("transceiver", () -> new Block(BlockBehaviour.Properties.of().strength(2.0f).noOcclusion()));
 
     public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);
