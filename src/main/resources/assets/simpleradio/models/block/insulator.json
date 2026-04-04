@@ -1,5 +1,7 @@
 {
+	"parent": "minecraft:block/cube_all",
 	"textures": {
-		"particle": "minecraft:block/oak_log_top"
+		"all": "simpleradio:block/insulator",
+		"particle": "simpleradio:block/insulator"
 	}
 }
