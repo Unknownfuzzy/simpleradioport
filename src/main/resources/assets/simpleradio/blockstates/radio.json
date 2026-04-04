@@ -1,6 +1,6 @@
 {
   "variants": {
-    "facing=north": { "model": "simpleradio:block/radio" },
+    "facing=north": { "model": "simpleradio:block/radio", "y": 0 },
     "facing=east":  { "model": "simpleradio:block/radio", "y": 90 },
     "facing=south": { "model": "simpleradio:block/radio", "y": 180 },
     "facing=west":  { "model": "simpleradio:block/radio", "y": 270 }
