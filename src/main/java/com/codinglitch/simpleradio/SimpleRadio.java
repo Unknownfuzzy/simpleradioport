@@ -57,7 +57,13 @@ public class SimpleRadio {
             event.accept(ModItems.TRANSMITTER.get());
 
             // Items
-            event.accept(ModItems.MICROPHONE.get());
+            event.accept(ModItems.TRANSCEIVER.get());
+            event.accept(ModItems.COPPER_WIRE.get());
+            event.accept(ModItems.DIAMOND_MODULE.get());
+            event.accept(ModItems.GOLD_MODULE.get());
+            event.accept(ModItems.IRON_MODULE.get());
+            event.accept(ModItems.NETHERITE_MODULE.get());
+            event.accept(ModItems.LISTENER_MODULE.get());
         }
     }
 }

@@ -20,9 +20,16 @@ public class ModItems {
     public static final DeferredItem<Item> RADIOSMITHER = ITEMS.register("radiosmither", () -> new BlockItem(ModBlocks.RADIOSMITHER.get(), new Item.Properties()));
     public static final DeferredItem<Item> RECEIVER = ITEMS.register("receiver", () -> new BlockItem(ModBlocks.RECEIVER.get(), new Item.Properties()));
     public static final DeferredItem<Item> TRANSMITTER = ITEMS.register("transmitter", () -> new BlockItem(ModBlocks.TRANSMITTER.get(), new Item.Properties()));
-    public static final DeferredItem<Item> TRANSCEIVER = ITEMS.register("transceiver", () -> new BlockItem(ModBlocks.TRANSCEIVER.get(), new Item.Properties()));
+
     // Standalone Items (like the handheld microphone)
-    public static final DeferredItem<Item> MICROPHONE = ITEMS.register("microphone", () -> new Item(new Item.Properties()));
+    public static final DeferredItem<Item> TRANSCEIVER = ITEMS.register("transceiver", () -> new Item(new Item.Properties()));
+    public static final DeferredItem<Item> COPPER_WIRE = ITEMS.register("copper_wire", () -> new Item(new Item.Properties()));
+    public static final DeferredItem<Item> DIAMOND_MODULE = ITEMS.register("diamond_module", () -> new Item(new Item.Properties()));
+    public static final DeferredItem<Item> GOLD_MODULE = ITEMS.register("gold_module", () -> new Item(new Item.Properties()));
+    public static final DeferredItem<Item> IRON_MODULE = ITEMS.register("iron_module", () -> new Item(new Item.Properties()));
+    public static final DeferredItem<Item> LISTENER_MODULE = ITEMS.register("listener_module", () -> new Item(new Item.Properties()));
+    public static final DeferredItem<Item> NETHERITE_MODULE = ITEMS.register("netherite_module", () -> new Item(new Item.Properties()));
+
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

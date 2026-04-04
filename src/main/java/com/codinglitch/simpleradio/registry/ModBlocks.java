@@ -3,7 +3,6 @@ package com.codinglitch.simpleradio.registry;
 import com.codinglitch.simpleradio.SimpleRadio;
 import com.codinglitch.simpleradio.block.RadioBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -24,7 +23,7 @@ public class ModBlocks {
     public static final DeferredBlock<Block> RADIOSMITHER = BLOCKS.register("radiosmither", () -> new Block(BlockBehaviour.Properties.of().strength(2.0f).noOcclusion()));
     public static final DeferredBlock<Block> RECEIVER = BLOCKS.register("receiver", () -> new Block(BlockBehaviour.Properties.of().strength(2.0f).noOcclusion()));
     public static final DeferredBlock<Block> TRANSMITTER = BLOCKS.register("transmitter", () -> new Block(BlockBehaviour.Properties.of().strength(2.0f).noOcclusion()));
-    public static final DeferredBlock<Block> TRANSCEIVER = BLOCKS.register("transceiver", () -> new Block(BlockBehaviour.Properties.of().strength(2.0f).noOcclusion()));
+
 
     public static void register(IEventBus eventBus) {
         BLOCKS.register(eventBus);
