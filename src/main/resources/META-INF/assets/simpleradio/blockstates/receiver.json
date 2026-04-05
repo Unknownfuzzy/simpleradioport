@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=north": { "model": "simpleradio:block/speaker" },
+		"facing=south": { "model": "simpleradio:block/speaker", "y": 180 },
+		"facing=west":  { "model": "simpleradio:block/speaker", "y": 270 },
+		"facing=east":  { "model": "simpleradio:block/speaker", "y": 90 },
+		"facing=up":    { "model": "simpleradio:block/speaker", "x": 270 },
+		"facing=down":  { "model": "simpleradio:block/speaker", "x": 90 }
+	}
+}
