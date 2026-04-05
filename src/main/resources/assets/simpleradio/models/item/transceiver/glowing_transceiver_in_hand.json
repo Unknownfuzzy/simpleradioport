@@ -1,6 +1,0 @@
-{
-  "parent": "simpleradio:item/transceiver/transceiver_in_hand",
-  "textures": {
-    "0": "simpleradio:item/glowing_transceiver_model"
-  }
-}

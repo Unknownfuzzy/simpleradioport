@@ -1,13 +1,13 @@
 modLoader="javafml"
-loaderVersion="[4,)"
-license="All Rights Reserved"
+loaderVersion="[2,)"
+license="MIT"
 
 [[mods]]
 modId="simpleradio"
 version="1.0.0"
-displayName="Simple Voice Radio"
+displayName="Simple Radio"
 authors="CodinGlitch"
-description='''Simple voice radio mod ported to NeoForge 1.21.1'''
+description="A simple radio mod for Minecraft."
 
 [[dependencies.simpleradio]]
 modId="neoforge"
@@ -19,13 +19,6 @@ side="BOTH"
 [[dependencies.simpleradio]]
 modId="minecraft"
 type="required"
-versionRange="[1.21.1,1.21.22]"
-ordering="NONE"
-side="BOTH"
-
-[[dependencies.simpleradio]]
-modId="voicechat"
-type="required"
-versionRange="[0,)" # This covers all 2.x versions, including 2.6.14
+versionRange="[1.21.1,1.22)"
 ordering="NONE"
 side="BOTH"
