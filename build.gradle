@@ -3,21 +3,10 @@ plugins {
     id 'net.neoforged.moddev' version '2.0.141'
 }
 
-// 1. Define the bucket
-configurations {
-    extraLibs
-}
-
 version = '1.0.0'
 group = 'com.codinglitch.simpleradio'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
-
-// 2. The Fix: Calculate the path before the NeoForge block even starts
-// This way we don't need doFirst or any special methods.
-def getExtraModulePath = {
-    return configurations.extraLibs.files.collect { it.absolutePath }.join(File.pathSeparator)
-}
 
 neoForge {
     version = '21.1.222'
@@ -30,24 +19,6 @@ neoForge {
     runs {
         configureEach {
             systemProperty 'neoforge.logging.console.level', 'debug'
-
-            // Inject the Netty modules
-            jvmArguments.add(project.provider { "-p" })
-            jvmArguments.add(project.provider { getExtraModulePath() })
-
-            // Mandatory Unlocking Flags for Java 21 + NeoForge
-            jvmArguments.addAll(
-                    "--add-modules", "io.netty.handler.proxy,io.netty.codec.http",
-                    "--add-opens", "java.base/java.lang=ALL-UNNAMED",
-                    "--add-opens", "java.base/java.lang.invoke=ALL-UNNAMED",
-                    "--add-opens", "java.base/java.lang.reflect=ALL-UNNAMED",
-                    "--add-opens", "java.base/java.io=ALL-UNNAMED",
-                    "--add-opens", "java.base/java.net=ALL-UNNAMED",
-                    "--add-opens", "java.base/java.nio=ALL-UNNAMED",
-                    "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED",
-                    "--add-opens", "java.base/java.util=ALL-UNNAMED",
-                    "--add-opens", "java.base/java.util.concurrent=ALL-UNNAMED"
-            )
         }
 
         client {
@@ -70,34 +41,19 @@ neoForge {
 
 repositories {
     mavenCentral()
-    maven { url = "https://maven.maxhenkel.de/repository/public" } // <--- ADD THIS
-    maven { url = "https://api.modrinth.com/maven" }
-    flatDir { dirs 'libs' }
+    maven { url = "https://maven.maxhenkel.de/repository/public" }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
 }
 
 dependencies {
-    // 1. ComputerCraft
-    implementation "maven.modrinth:cc-tweaked:1.117.1-neoforge"
+    implementation "maven.modrinth:cc-tweaked:1.116.1-neoforge"
 
-    // 2. Simple Voice Chat - API (UPDATED VERSION STRING)
-    // The API versioning often drops the "2.6.14" part or uses a different suffix
-    compileOnly files('libs/voicechat-api.jar')
-
-    // 3. Simple Voice Chat - Mod (For Running)
-    // Make sure this file is physically in your /libs folder!
-    implementation name: 'voicechat-neoforge-1.21.1-2.6.14'
-
-    // 4. Netty Resolution Fix
-    def netty_version = "4.1.97.Final"
-    implementation "io.netty:netty-handler-proxy:${netty_version}"
-    implementation "io.netty:netty-codec-http:${netty_version}"
-    extraLibs "io.netty:netty-handler-proxy:${netty_version}"
-    extraLibs "io.netty:netty-codec-http:${netty_version}"
-}
-
-tasks.withType(JavaExec).configureEach {
-    jvmArgs += [
-            "--add-opens", "java.base/java.lang.invoke=ALL-UNNAMED",
-            "--add-opens", "java.base/java.lang=ALL-UNNAMED"
-    ]
+    implementation "de.maxhenkel.voicechat:voicechat-api:2.5.27"
+    runtimeOnly "maven.modrinth:simple-voice-chat:neoforge-1.21.1-2.5.29"
 }
