@@ -1,0 +1,24 @@
+{
+  "credit": "Fallback model tuned for the existing 32x32 insulator texture",
+  "parent": "minecraft:block/block",
+  "render_type": "cutout",
+  "texture_size": [32, 32],
+  "textures": {
+    "texture": "simpleradio:block/insulator",
+    "particle": "simpleradio:block/insulator"
+  },
+  "elements": [
+    {
+      "from": [5.5, 1, 6],
+      "to": [6.5, 7, 10],
+      "faces": {
+        "east": { "uv": [0, 0, 22, 21], "texture": "#texture" },
+        "west": { "uv": [0, 0, 22, 21], "texture": "#texture" },
+        "north": { "uv": [21, 0, 22, 6], "texture": "#texture" },
+        "south": { "uv": [0, 0, 1, 6], "texture": "#texture" },
+        "up": { "uv": [0, 0, 4, 1], "texture": "#texture" },
+        "down": { "uv": [0, 20, 4, 21], "texture": "#texture" }
+      }
+    }
+  ]
+}

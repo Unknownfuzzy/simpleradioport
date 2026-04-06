@@ -1,0 +1,51 @@
+package com.codinglitch.simpleradio.platform;
+
+import com.codinglitch.simpleradio.central.WorldlyPosition;
+import com.codinglitch.simpleradio.platform.services.CompatPlatform;
+import com.codinglitch.simpleradio.radio.RadioManager;
+import com.codinglitch.simpleradio.radio.RadioSource;
+import com.codinglitch.simpleradio.radio.RadioSpeaker;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import org.joml.Quaternionf;
+
+import java.util.function.Predicate;
+
+public class NeoForgeCompatPlatform implements CompatPlatform {
+    @Override
+    public void postInitialize() {
+    }
+
+    @Override
+    public void postCompatibilityLoad() {
+    }
+
+    @Override
+    public void onData(RadioSpeaker channel, RadioSource source, short[] decoded) {
+    }
+
+    @Override
+    public WorldlyPosition modifyPosition(WorldlyPosition position) {
+        return position;
+    }
+
+    @Override
+    public Quaternionf modifyRotation(WorldlyPosition position, Quaternionf rotation) {
+        return rotation;
+    }
+
+    @Override
+    public RadioManager.CollectionResult verifyLocationCollection(WorldlyPosition location, Class<?> clazz) {
+        return RadioManager.CollectionResult.PASS;
+    }
+
+    @Override
+    public RadioManager.CollectionResult verifyEntityCollection(Entity entity, Predicate<ItemStack> inventoryCriteria) {
+        return RadioManager.CollectionResult.PASS;
+    }
+
+    @Override
+    public String getSound(ItemStack stack) {
+        return null;
+    }
+}

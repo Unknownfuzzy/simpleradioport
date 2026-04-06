@@ -1,5 +1,6 @@
 package com.codinglitch.simpleradio;
 
+import com.codinglitch.simpleradio.datagen.CommonRecipeProvider;
 import com.codinglitch.simpleradio.datagen.ModBlockStateProvider;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -21,6 +22,7 @@ public class DataGenerators {
         generator.addProvider(event.includeClient(),
                 new ModBlockStateProvider(packOutput, existingFileHelper));
 
-        // You can add others here later (LootTables, Recipes, etc.)
+        generator.addProvider(event.includeServer(),
+                new CommonRecipeProvider(packOutput, event.getLookupProvider()));
     }
 }

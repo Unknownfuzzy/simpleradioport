@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "rotation=0": {
+      "model": "simpleradio:block/radio"
+    },
+    "rotation=1": {
+      "model": "simpleradio:block/radio"
+    },
+    "rotation=10": {
+      "model": "simpleradio:block/radio",
+      "y": 180
+    },
+    "rotation=11": {
+      "model": "simpleradio:block/radio",
+      "y": 180
+    },
+    "rotation=12": {
+      "model": "simpleradio:block/radio",
+      "y": 270
+    },
+    "rotation=13": {
+      "model": "simpleradio:block/radio",
+      "y": 270
+    },
+    "rotation=14": {
+      "model": "simpleradio:block/radio",
+      "y": 270
+    },
+    "rotation=15": {
+      "model": "simpleradio:block/radio",
+      "y": 270
+    },
+    "rotation=2": {
+      "model": "simpleradio:block/radio"
+    },
+    "rotation=3": {
+      "model": "simpleradio:block/radio"
+    },
+    "rotation=4": {
+      "model": "simpleradio:block/radio",
+      "y": 90
+    },
+    "rotation=5": {
+      "model": "simpleradio:block/radio",
+      "y": 90
+    },
+    "rotation=6": {
+      "model": "simpleradio:block/radio",
+      "y": 90
+    },
+    "rotation=7": {
+      "model": "simpleradio:block/radio",
+      "y": 90
+    },
+    "rotation=8": {
+      "model": "simpleradio:block/radio",
+      "y": 180
+    },
+    "rotation=9": {
+      "model": "simpleradio:block/radio",
+      "y": 180
+    }
+  }
+}
