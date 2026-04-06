@@ -368,6 +368,9 @@ public class RadioManager extends ServerSimpleRadioApi {
         }
 
         for (QueuedSource source : acceptedSources) {
+            if (source.router == null || !source.router.isValid() || !source.router.isActive()) {
+                continue;
+            }
             source.router.accept(source.source);
         }
     }

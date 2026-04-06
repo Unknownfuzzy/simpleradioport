@@ -148,6 +148,13 @@ public class FrequencyChannel implements Frequency {
 
     @Override
     public void removeReceiver(Predicate<Receiver> criteria) {
+        receivers.getContent().stream()
+                .filter(criteria)
+                .forEach(receiver -> {
+                    receiver.setActive(false);
+                    receiver.getRouters().clear();
+                    receiver.invalidate();
+                });
         receivers.removeIf(criteria);
 
         if (!this.validate()) RadioManager.getInstance().frequencies().remove(this);
@@ -246,6 +253,13 @@ public class FrequencyChannel implements Frequency {
 
     @Override
     public void removeTransmitter(Predicate<Transmitter> criteria) {
+        transmitters.getContent().stream()
+                .filter(criteria)
+                .forEach(transmitter -> {
+                    transmitter.setActive(false);
+                    transmitter.getRouters().clear();
+                    transmitter.invalidate();
+                });
         transmitters.removeIf(criteria);
 
         if (!this.validate()) RadioManager.getInstance().frequencies().remove(this);

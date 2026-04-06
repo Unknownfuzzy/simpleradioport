@@ -119,6 +119,18 @@ public class RadioBlock extends BaseEntityBlock implements Routing, Speaking, Re
         return 0;
     }
 
+    @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!state.is(newState.getBlock())) {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof RadioBlockEntity radioBlockEntity) {
+                radioBlockEntity.inactivate();
+            }
+        }
+
+        super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         ItemStack stack = new ItemStack(this);
         BlockEntity blockEntity = builder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);

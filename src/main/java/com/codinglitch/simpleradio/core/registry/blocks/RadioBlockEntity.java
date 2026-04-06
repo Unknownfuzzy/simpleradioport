@@ -100,6 +100,20 @@ public class RadioBlockEntity extends AuditoryBlockEntity implements Receiving, 
             if (!this.level.isClientSide) stopSpeaking();
         }
 
+        if (this.receiver != null) {
+            this.receiver.setActive(false);
+            this.receiver.getRouters().clear();
+            this.receiver.invalidate();
+            this.receiver = null;
+        }
+
+        if (this.speaker != null) {
+            this.speaker.setActive(false);
+            this.speaker.getRouters().clear();
+            this.speaker.invalidate();
+            this.speaker = null;
+        }
+
         this.isActive = false;
     }
 

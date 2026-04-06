@@ -25,6 +25,10 @@ public interface RouterHolder<R extends Router> {
             list.removeIf(criteria);
         }
 
+        removal.setActive(false);
+        removal.getRouters().clear();
+        removal.invalidate();
+
         return removal;
     }
     default R remove(R router) {
