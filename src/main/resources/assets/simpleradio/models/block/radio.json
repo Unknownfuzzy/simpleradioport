@@ -1,0 +1,35 @@
+{
+  "credit": "Fallback model tuned for the existing 32x32 radio texture",
+  "parent": "minecraft:block/block",
+  "render_type": "cutout",
+  "texture_size": [32, 32],
+  "textures": {
+    "texture": "simpleradio:block/radio",
+    "particle": "simpleradio:block/radio"
+  },
+  "elements": [
+    {
+      "from": [2, 0, 3],
+      "to": [14, 6, 13],
+      "faces": {
+        "north": { "uv": [2, 13, 14, 19], "texture": "#texture" },
+        "east": { "uv": [2, 13, 12, 19], "texture": "#texture" },
+        "south": { "uv": [2, 13, 14, 19], "texture": "#texture" },
+        "west": { "uv": [2, 13, 12, 19], "texture": "#texture" },
+        "up": { "uv": [2, 13, 14, 23], "texture": "#texture" },
+        "down": { "uv": [2, 13, 14, 23], "texture": "#texture" }
+      }
+    },
+    {
+      "from": [2, 0, 2],
+      "to": [14, 10, 3],
+      "faces": {
+        "north": { "uv": [0, 0, 28, 25], "texture": "#texture" },
+        "up": { "uv": [0, 0, 12, 1], "texture": "#texture" },
+        "down": { "uv": [0, 24, 12, 25], "texture": "#texture" },
+        "east": { "uv": [27, 0, 28, 10], "texture": "#texture" },
+        "west": { "uv": [0, 0, 1, 10], "texture": "#texture" }
+      }
+    }
+  ]
+}

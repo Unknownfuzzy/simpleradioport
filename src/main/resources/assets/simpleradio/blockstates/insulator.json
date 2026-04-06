@@ -1,0 +1,16 @@
+{
+  "multipart": [
+    { "when": { "facing": "up", "rotated": "false" }, "apply": { "model": "simpleradio:block/insulator" } },
+    { "when": { "facing": "up", "rotated": "true" }, "apply": { "model": "simpleradio:block/insulator_rotated" } },
+    { "when": { "facing": "down", "rotated": "false" }, "apply": { "model": "simpleradio:block/insulator", "x": 180 } },
+    { "when": { "facing": "down", "rotated": "true" }, "apply": { "model": "simpleradio:block/insulator_rotated", "x": 180 } },
+    { "when": { "facing": "north", "rotated": "false" }, "apply": { "model": "simpleradio:block/insulator", "x": 90 } },
+    { "when": { "facing": "north", "rotated": "true" }, "apply": { "model": "simpleradio:block/insulator_rotated", "x": 90 } },
+    { "when": { "facing": "south", "rotated": "false" }, "apply": { "model": "simpleradio:block/insulator", "x": 90, "y": 180 } },
+    { "when": { "facing": "south", "rotated": "true" }, "apply": { "model": "simpleradio:block/insulator_rotated", "x": 90, "y": 180 } },
+    { "when": { "facing": "west", "rotated": "false" }, "apply": { "model": "simpleradio:block/insulator", "x": 90, "y": 270 } },
+    { "when": { "facing": "west", "rotated": "true" }, "apply": { "model": "simpleradio:block/insulator_rotated", "x": 90, "y": 270 } },
+    { "when": { "facing": "east", "rotated": "false" }, "apply": { "model": "simpleradio:block/insulator", "x": 90, "y": 90 } },
+    { "when": { "facing": "east", "rotated": "true" }, "apply": { "model": "simpleradio:block/insulator_rotated", "x": 90, "y": 90 } }
+  ]
+}

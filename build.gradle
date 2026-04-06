@@ -21,9 +21,13 @@ neoForge {
             systemProperty 'neoforge.logging.console.level', 'debug'
         }
 
+        data {
+            data()
+            programArguments.addAll '--mod', 'simpleradio', '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        } // <--- THIS WAS MISSING
+
         client {
             client()
-            // Force these flags specifically for the client run
             jvmArguments.add("-Dumbrella.show_all_logs=true")
         }
 
@@ -39,6 +43,13 @@ neoForge {
     }
 }
 
+// This block tells IntelliJ and the game to look in 'src/generated/resources'
+// for the JSON files you are about to create.
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+tasks.named('processResources') {
+    duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
+}
+
 repositories {
     mavenCentral()
     maven { url = "https://maven.maxhenkel.de/repository/public" }
@@ -51,9 +62,13 @@ repositories {
     }
 }
 
+def isDataRun = gradle.startParameter.taskNames.any { it.toLowerCase().contains('rundata') }
+
 dependencies {
     implementation "maven.modrinth:cc-tweaked:1.116.1-neoforge"
-
     implementation "de.maxhenkel.voicechat:voicechat-api:2.5.27"
-    runtimeOnly "maven.modrinth:simple-voice-chat:neoforge-1.21.1-2.5.29"
+
+    if (!isDataRun) {
+        runtimeOnly "maven.modrinth:simple-voice-chat:neoforge-1.21.1-2.5.29"
+    }
 }
