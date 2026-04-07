@@ -6,10 +6,13 @@ public abstract class AudioEffect {
 
     public short[] apply(short[] data) {
         for (int i = 0; i < data.length; i++) {
-            short audio = data[i];
-            data[i] = (short) (audio * volume);
+            data[i] = clampSample(data[i] * volume);
         }
 
         return data;
+    }
+
+    protected short clampSample(float sample) {
+        return (short) Math.max(Short.MIN_VALUE, Math.min(Math.round(sample), Short.MAX_VALUE));
     }
 }

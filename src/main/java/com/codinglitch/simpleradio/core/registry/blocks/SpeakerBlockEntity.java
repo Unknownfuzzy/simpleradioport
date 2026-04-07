@@ -84,6 +84,13 @@ public class SpeakerBlockEntity extends AuditoryBlockEntity implements Speaking 
             //stopReceiving(frequency.frequency, frequency.modulation, id);
         }
 
+        if (this.speaker != null) {
+            this.speaker.setActive(false);
+            this.speaker.getRouters().clear();
+            this.speaker.invalidate();
+            this.speaker = null;
+        }
+
         this.isActive = false;
     }
 

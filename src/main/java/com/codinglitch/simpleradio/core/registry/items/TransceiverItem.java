@@ -224,12 +224,9 @@ public class TransceiverItem extends Item implements Listening, Speaking, Receiv
         ItemStack stack = player.getItemInHand(hand);
         entityTick(stack, player);
 
-        level.playSound(
-                player, player.blockPosition(),
-                SimpleRadioSounds.RADIO_OPEN,
-                SoundSource.PLAYERS,
-                1f,1f
-        );
+        if (level.isClientSide) {
+            player.playSound(SimpleRadioSounds.RADIO_OPEN, 1f, 1f);
+        }
         player.startUsingItem(hand);
 
         return InteractionResultHolder.consume(stack);
@@ -248,14 +245,11 @@ public class TransceiverItem extends Item implements Listening, Speaking, Receiv
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity user, int remainingUseTicks) {
         if (user instanceof Player player) {
-            level.playSound(
-                    player, user.blockPosition(),
-                    SimpleRadioSounds.RADIO_CLOSE,
-                    SoundSource.PLAYERS,
-                    1f,1f
-            );
-
-            player.getCooldowns().addCooldown(this, this.getCooldown());
+            if (level.isClientSide) {
+                player.playSound(SimpleRadioSounds.RADIO_CLOSE, 1f, 1f);
+            } else {
+                player.getCooldowns().addCooldown(this, this.getCooldown());
+            }
         }
 
         super.releaseUsing(stack, level, user, remainingUseTicks);

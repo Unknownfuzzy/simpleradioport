@@ -9,7 +9,9 @@ import com.codinglitch.simpleradio.platform.Services;
 import com.codinglitch.simpleradio.radio.effects.AudioEffect;
 import com.codinglitch.simpleradio.radio.effects.BaseAudioEffect;
 import com.codinglitch.simpleradio.core.routers.Speaker;
+import de.maxhenkel.voicechat.api.audiochannel.AudioChannel;
 import de.maxhenkel.voicechat.api.audiochannel.AudioPlayer;
+import de.maxhenkel.voicechat.api.audiochannel.EntityAudioChannel;
 import de.maxhenkel.voicechat.api.audiochannel.LocationalAudioChannel;
 import de.maxhenkel.voicechat.api.opus.OpusDecoder;
 import net.minecraft.server.level.ServerLevel;
@@ -31,8 +33,9 @@ import java.util.function.Supplier;
  * <b>Does not route further.</b>
  */
 public class RadioSpeaker extends RadioRouter implements Supplier<short[]>, Speaker {
-    // migrated to locational audio channels only due to alternatives not having range property
-    public LocationalAudioChannel audioChannel;
+    public AudioChannel audioChannel;
+    public EntityAudioChannel entityAudioChannel;
+    public LocationalAudioChannel locationalAudioChannel;
     public AudioPlayer audioPlayer;
     private final Map<UUID, Map<UUID, Queue<short[]>>> packetBuffer;
     private final Map<UUID, OpusDecoder> decoders;
@@ -42,6 +45,7 @@ public class RadioSpeaker extends RadioRouter implements Supplier<short[]>, Spea
     public float range = 8;
 
     public int speakingTime = 0;
+    private int emptyFrames = 0;
 
     protected RadioSpeaker(UUID id) {
         super(id);
@@ -102,12 +106,24 @@ public class RadioSpeaker extends RadioRouter implements Supplier<short[]>, Spea
     public short[] get() {
         short[] audio = generatePacket();
         if (audio == null) {
-            if (audioPlayer != null)
+            if (audioPlayer != null && (this.speakingTime > 0 || !packetBuffer.isEmpty()) && emptyFrames < 2) {
+                emptyFrames++;
+                return new short[960];
+            }
+
+            if (audioPlayer != null) {
                 audioPlayer.stopPlaying();
+            }
 
             audioPlayer = null;
+            audioChannel = null;
+            entityAudioChannel = null;
+            locationalAudioChannel = null;
+            emptyFrames = 0;
             return null;
         }
+
+        emptyFrames = 0;
         return audio;
     }
 
@@ -140,8 +156,13 @@ public class RadioSpeaker extends RadioRouter implements Supplier<short[]>, Spea
     public void updateLocation(WorldlyPosition location) {
         super.updateLocation(location);
 
-        if (audioChannel != null) {
-            audioChannel.updateLocation(CommonRadioPlugin.serverApi.createPosition(location.x, location.y, location.z));
+        if (locationalAudioChannel != null) {
+            Vector3f audioPosition = getAudioChannelPosition(location);
+            locationalAudioChannel.updateLocation(CommonRadioPlugin.serverApi.createPosition(audioPosition.x, audioPosition.y, audioPosition.z));
+        }
+
+        if (entityAudioChannel != null && owner != null) {
+            entityAudioChannel.updateEntity(CommonRadioPlugin.serverApi.fromEntity(owner));
         }
     }
 
@@ -162,6 +183,15 @@ public class RadioSpeaker extends RadioRouter implements Supplier<short[]>, Spea
 
     public void speak(Source source) {
         RadioSource radioSource = (RadioSource) source;
+        boolean cleanVoicePath = radioSource.data != null;
+
+        if (locationalAudioChannel != null) {
+            WorldlyPosition currentLocation = getLocation();
+            if (currentLocation != null) {
+                Vector3f audioPosition = getAudioChannelPosition(currentLocation);
+                locationalAudioChannel.updateLocation(CommonRadioPlugin.serverApi.createPosition(audioPosition.x, audioPosition.y, audioPosition.z));
+            }
+        }
 
         // Severity calculation
         ServerLevel level = null;
@@ -177,9 +207,13 @@ public class RadioSpeaker extends RadioRouter implements Supplier<short[]>, Spea
 
         if (!SimpleRadioLibrary.SERVER_CONFIG.frequency.crossDimensional && level != radioSource.origin.level) return;
 
-        this.effect.severity = (float) radioSource.computeSeverity();
+        float computedSeverity = (float) radioSource.computeSeverity();
+        if (!cleanVoicePath && (CommonRadioPlugin.RADIOS_CATEGORY.equals(category) || CommonRadioPlugin.SPEAKERS_CATEGORY.equals(category))) {
+            computedSeverity *= 0.35f;
+        }
+        this.effect.severity = cleanVoicePath ? 0f : Math.max(0f, Math.min(computedSeverity, 100f));
         this.effect.volume = radioSource.volume;
-        if (this.effect.severity >= 100) return;
+        if (!cleanVoicePath && this.effect.severity >= 100) return;
 
         // Parsing sound event
         if (radioSource.data == null) {
@@ -224,7 +258,9 @@ public class RadioSpeaker extends RadioRouter implements Supplier<short[]>, Spea
             this.speakingTime = 4;
         }
 
-        short[] filtered = effect.apply(Arrays.copyOf(decoded, decoded.length));
+        short[] filtered = cleanVoicePath
+                ? applyVolumeOnly(Arrays.copyOf(decoded, decoded.length), radioSource.volume)
+                : effect.apply(Arrays.copyOf(decoded, decoded.length));
 
         playerPackets.offer(filtered);
         trimPacketBuffer(playerPackets);
@@ -246,30 +282,92 @@ public class RadioSpeaker extends RadioRouter implements Supplier<short[]>, Spea
         }
     }
 
+    private short[] applyVolumeOnly(short[] data, float volume) {
+        for (int i = 0; i < data.length; i++) {
+            data[i] = clampSample(data[i] * volume);
+        }
+        return data;
+    }
+
+    private short clampSample(float sample) {
+        return (short) Math.max(Short.MIN_VALUE, Math.min(Math.round(sample), Short.MAX_VALUE));
+    }
+
     public OpusDecoder getDecoder(UUID sender) {
         return decoders.computeIfAbsent(sender, uuid -> CommonRadioPlugin.serverApi.createDecoder());
     }
 
     private AudioPlayer getAudioPlayer() {
         if (this.audioPlayer == null) {
+            boolean handheldChannel = usesHandheldAudioChannel();
 
-            WorldlyPosition location = this.getLocation();
-            this.audioChannel = CommonRadioPlugin.serverApi.createLocationalAudioChannel(this.reference,
-                    CommonRadioPlugin.serverApi.fromServerLevel(location.level),
-                    CommonRadioPlugin.serverApi.createPosition(location.x + 0.5, location.y + 0.5, location.z + 0.5)
-            );
-            audioChannel.setDistance(range);
-            audioChannel.setCategory(category);
+            if (owner != null && !handheldChannel) {
+                this.entityAudioChannel = CommonRadioPlugin.serverApi.createEntityAudioChannel(this.reference, CommonRadioPlugin.serverApi.fromEntity(owner));
+                this.audioChannel = this.entityAudioChannel;
+                if (this.entityAudioChannel != null) {
+                    this.entityAudioChannel.setDistance(range);
+                    this.entityAudioChannel.setCategory(category);
+                }
+            }
+
+            if (this.audioChannel == null) {
+                WorldlyPosition location = this.getLocation();
+                Vector3f audioPosition = getAudioChannelPosition(location);
+                this.locationalAudioChannel = CommonRadioPlugin.serverApi.createLocationalAudioChannel(this.reference,
+                        CommonRadioPlugin.serverApi.fromServerLevel(location.level),
+                        CommonRadioPlugin.serverApi.createPosition(audioPosition.x, audioPosition.y, audioPosition.z)
+                );
+                this.audioChannel = this.locationalAudioChannel;
+                if (this.locationalAudioChannel != null) {
+                    this.locationalAudioChannel.setDistance(range);
+                    this.locationalAudioChannel.setCategory(category);
+                }
+            }
 
             this.audioPlayer = CommonRadioPlugin.serverApi.createAudioPlayer(audioChannel, CommonRadioPlugin.serverApi.createEncoder(), this);
         }
         return this.audioPlayer;
     }
 
+    private boolean usesHandheldAudioChannel() {
+        return owner != null && (
+                CommonRadioPlugin.TRANSCEIVERS_CATEGORY.equals(category)
+                        || CommonRadioPlugin.WALKIES_CATEGORY.equals(category)
+        );
+    }
+
+    private Vector3f getAudioChannelPosition(WorldlyPosition location) {
+        if (owner != null && usesHandheldAudioChannel()) {
+            Vec3 look = owner.getLookAngle().scale(0.35d);
+            return new Vector3f(
+                    (float) (owner.getX() + look.x),
+                    (float) (owner.getEyeY() - 0.15d + look.y),
+                    (float) (owner.getZ() + look.z)
+            );
+        }
+
+        if (owner == null) {
+            return new Vector3f(location.x + 0.5f, location.y + 0.5f, location.z + 0.5f);
+        }
+
+        return new Vector3f(location.x, location.y, location.z);
+    }
+
     @Override
     public void invalidate() {
-        if (this.audioPlayer != null)
+        if (this.audioPlayer != null) {
             this.audioPlayer.stopPlaying();
+        }
+
+        this.packetBuffer.clear();
+        this.decoders.clear();
+        this.speakingTime = 0;
+        this.emptyFrames = 0;
+        this.audioPlayer = null;
+        this.audioChannel = null;
+        this.entityAudioChannel = null;
+        this.locationalAudioChannel = null;
+        this.active = false;
 
         super.invalidate();
     }

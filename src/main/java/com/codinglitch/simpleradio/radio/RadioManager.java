@@ -119,7 +119,7 @@ public class RadioManager extends ServerSimpleRadioApi {
     @Override
     public <T> Optional<T> getConfig(String path) {
         try {
-            java.util.List<String> pathList = java.util.Arrays.asList(path.split("\\."));
+            java.util.List<String> pathList = resolveConfigPath(path);
             Object value = SimpleRadioServerConfig.SPEC.getValues().get(pathList);
             if (value instanceof net.neoforged.neoforge.common.ModConfigSpec.ConfigValue<?> configValue) {
                 return Optional.ofNullable((T) configValue.get());
@@ -135,7 +135,7 @@ public class RadioManager extends ServerSimpleRadioApi {
     @Override
     public <T> void setConfig(String path, T value) {
         try {
-            java.util.List<String> pathList = java.util.Arrays.asList(path.split("\\."));
+            java.util.List<String> pathList = resolveConfigPath(path);
             Object configObject = SimpleRadioServerConfig.SPEC.getValues().get(pathList);
             if (configObject instanceof net.neoforged.neoforge.common.ModConfigSpec.ConfigValue<?> configValue) {
                 @SuppressWarnings("unchecked")
@@ -143,10 +143,31 @@ public class RadioManager extends ServerSimpleRadioApi {
                         (net.neoforged.neoforge.common.ModConfigSpec.ConfigValue<T>) configValue;
                 typedValue.set(value);
                 typedValue.save();
+                SimpleRadioLibrary.reloadServerConfig();
             }
         } catch (Exception e) {
             CommonSimpleRadio.error("Error setting server config path: " + path, e);
         }
+    }
+
+    private static List<String> resolveConfigPath(String path) {
+        List<String> pathList = new ArrayList<>();
+        if (path == null || path.isBlank()) {
+            pathList.add("Server");
+            return pathList;
+        }
+
+        String[] parts = path.split("\\.");
+        if (parts.length == 0 || !"Server".equals(parts[0])) {
+            pathList.add("Server");
+        }
+
+        for (String part : parts) {
+            if (!part.isBlank()) {
+                pathList.add(part);
+            }
+        }
+        return pathList;
     }
 
     @Override
@@ -494,10 +515,15 @@ public class RadioManager extends ServerSimpleRadioApi {
 
     // I mixin here instead of using the appropriate events to access the channel as well as prevent duplicates
     public void onLocationalPacket(Level level, LocationalAudioChannel channel, byte[] data) {
-
         String category = channel.getCategory();
         if (category != null) {
-            if (category.equals("speakers") || category.equals("transceivers") || category.equals("radios") || category.equals("walkies")) {
+            // Standalone speakers are terminal outputs; feeding them back into nearby listeners
+            // creates a recursive loop that quickly destroys quality in mic/speaker setups.
+            if (CommonRadioPlugin.SPEAKERS_CATEGORY.equals(category)) {
+                return;
+            }
+
+            if (category.equals("transceivers") || category.equals("radios") || category.equals("walkies")) {
                 if (!SimpleRadioLibrary.SERVER_CONFIG.router.feedbackListening) return;
             } else {
                 if (category.equals("music_discs") || category.equals("note_blocks") || category.equals("goat_horns"))
